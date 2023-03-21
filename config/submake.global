@@ -1,0 +1,29 @@
+CXX := g++
+
+FLAGS := -g
+FLAGS += $(addprefix -I, $(INCLUDE_PATH))
+
+CXXFLAGS := $(FLAGS)
+OBJCXXFLAGS := $(CXXFLAGS)\
+			 -c
+
+ifdef BUILD_DLIB # 是否需要编译为动态链接库
+OBJCXXFLAGS += -fPIC
+endif
+
+vpath %.cpp src
+
+.PHONY: build-sub-project
+build-sub-project: show-info mkdirs $(OBJS_FILES)
+
+.PHONY: show-info
+show-info:
+	@echo 🐢 Building $(SUB_PROJECT_NAME)...
+
+.PHONY: mkdirs
+mkdirs: $(BUILD_PATH)
+$(BUILD_PATH):
+	@mkdir -p $@
+
+$(BUILD_PATH)%.o: %.cpp
+	@$(CXX) $(OBJCXXFLAGS) $< -o $@
