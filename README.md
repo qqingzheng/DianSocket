@@ -1,1 +1,1 @@
-# DianSocket —— A Easy Chat Room for Learning Socket
+# DianSocket —— A Easy Example for Learning Socket
