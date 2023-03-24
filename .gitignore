@@ -5,3 +5,8 @@ protocol/build/
 protocol/dian_protocol_asn/build/
 *.so
 .gitignore
+client/client
+client/build/
+protocol/build-asn
+server/server
+socket/libdiansocket.so

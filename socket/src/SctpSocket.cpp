@@ -18,6 +18,7 @@ int SctpSocket::slisten()
         exit(1);
     }
     error = listen(sSocketConfig.sockFd, MAX_CONNECTIONS);
+    LOG_INFO("Listening in sockFd=%d\n", sSocketConfig.sockFd);
     if (error != 0)
     {
         LOG_ERROR("listen error: %s\n", strerror(errno));
@@ -43,7 +44,7 @@ int32_t SctpSocket::sconnect()
             sleep(1); /* sleep for retry... */
         }
         error = connect(sSocketConfig.sockFd, (struct sockaddr*)temp_addr, sSocketConfig.sCommonCfg.addrLen_r);
-        LOG_INFO("connecting to %s:%d, errno=%d\n.", sSocketConfig.sCommonCfg.name_r, sSocketConfig.sCommonCfg.port_r,
+        LOG_INFO("connecting to %s:%d, rc=%d\n.", sSocketConfig.sCommonCfg.name_r, sSocketConfig.sCommonCfg.port_r,
                     errno);
         if (error < 0)
         {
@@ -70,11 +71,11 @@ bool SctpSocket::saccept(int32_t listenSockFd)
     }
     int32_t            clientSocketFd;
     struct sockaddr_in clientAddress;
-    socklen_t          addressLen;
+    socklen_t          addressLen = sizeof(struct sockaddr);
     clientSocketFd = accept(listenSockFd, (struct sockaddr*)&clientAddress, &addressLen);
     if (clientSocketFd == -1)
     {
-        LOG_ERROR("sockfd accept fail! \n");
+        LOG_ERROR("sockfd accept fail! listenSockFd=%d\n", listenSockFd);
         return false;
     }
     set_socket_fd(clientSocketFd);

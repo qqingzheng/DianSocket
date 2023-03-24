@@ -1,10 +1,9 @@
 #ifndef SCTPSOCKET_H_
 #define SCTPSOCKET_H_
-
+#include "Socket.h"
 #include <unistd.h>
 #include <netinet/sctp.h>
 #include <tuple>
-#include "Socket.h"
 
 #define SCTP_MAX_RETRY 5
 

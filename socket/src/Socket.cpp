@@ -17,10 +17,10 @@ int32_t Socket::create_socket(){
 
       // Create Socket
     int32_t socketFd;
-    socketFd = socket(sSocketConfig.sCommonCfg.addr.ss_family, 
+    sockaddr_storage& addr = (sSocketConfig.sCommonCfg.addrLen != 0) ? sSocketConfig.sCommonCfg.addr : sSocketConfig.sCommonCfg.addr_r;
+    socketFd = socket(addr.ss_family, 
     sSocketConfig.sCommonCfg.socketType, sSocketConfig.sCommonCfg.protoType);
     LOG_INFO("ProtoType: %d  SocketType: %d \n", sSocketConfig.sCommonCfg.protoType, sSocketConfig.sCommonCfg.socketType);
-
     if(socketFd < 0){
         LOG_ERROR("Failed to create socket!\n");
         exit(1);
@@ -40,6 +40,7 @@ void Socket::init_local_host(const SocketParamStruct* sSockParam){
     strncpy(sCommonCfg.name, sSockParam->HostName, sizeof(sCommonCfg.name));  // copy hostname
     sCommonCfg.protoType  = sSockParam->protoType;
     sCommonCfg.socketType = sSockParam->socketType;
+    sCommonCfg.port = sSockParam->Port;
 
     error                               = getaddrinfo(sSockParam->HostName, 0, NULL, &res);
     if(error){
@@ -88,10 +89,10 @@ void Socket::init_remote_host(const SocketParamStruct* sSockParam){
     struct addrinfo*                    res;
     int32_t                             error;
     SocketCommonCfgStruct& sCommonCfg = sSocketConfig.sCommonCfg;
-
-    strncpy(sCommonCfg.name_r, sSockParam->HostName, sizeof(sCommonCfg.name_r));  // copy hostname
+    strncpy(sCommonCfg.name_r, sSockParam->HostName, sizeof(sCommonCfg.name));  // copy hostname
     sCommonCfg.protoType  = sSockParam->protoType;
     sCommonCfg.socketType = sSockParam->socketType;
+    sCommonCfg.port_r = sSockParam->Port;
 
     error                               = getaddrinfo(sSockParam->HostName, 0, NULL, &res);
     if(error){
@@ -103,7 +104,7 @@ void Socket::init_remote_host(const SocketParamStruct* sSockParam){
             struct sockaddr_in* tempAddr = (struct sockaddr_in*) &sCommonCfg.addr_r;
             tempAddr->sin_family = res->ai_family;
             memcpy(&tempAddr->sin_addr, res->ai_addr, res->ai_addrlen);
-            inet_pton(AF_INET, sCommonCfg.name, &tempAddr->sin_addr);
+            inet_pton(AF_INET, sCommonCfg.name_r, &tempAddr->sin_addr);
             tempAddr->sin_port = htons(sSockParam->Port);
             sCommonCfg.addrLen_r = res->ai_addrlen;
             break;
@@ -112,13 +113,13 @@ void Socket::init_remote_host(const SocketParamStruct* sSockParam){
             struct sockaddr_in6* tempAddr6 = (struct sockaddr_in6*) &sCommonCfg.addr_r;
             tempAddr6->sin6_family = res->ai_family;
             memcpy(&tempAddr6->sin6_addr, res->ai_addr, res->ai_addrlen);
-            inet_pton(AF_INET6, sCommonCfg.name, &tempAddr6->sin6_addr);
+            inet_pton(AF_INET6, sCommonCfg.name_r, &tempAddr6->sin6_addr);
             tempAddr6->sin6_port = htons(sSockParam->Port);
             sCommonCfg.addrLen_r = res->ai_addrlen;
             break;
         }
         default:{
-            LOG_ERROR("Fail to init local host!");
+            LOG_ERROR("Fail to init host! HostName: %s Port: %d\n", sSockParam->HostName, sSockParam->Port);
             exit(1);
         }
     }
@@ -127,7 +128,7 @@ void Socket::init_remote_host(const SocketParamStruct* sSockParam){
                         NI_MAXSERV, NI_NUMERICHOST);
     if (error)
     {
-        LOG_ERROR("%s\n", gai_strerror(error));
+        LOG_ERROR("%s", gai_strerror(error));
         exit(1);
     }
     LOG_INFO("remote:@=%s, port=%s, family=%d\n", hostStr, servStr, res->ai_family);

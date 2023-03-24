@@ -4,8 +4,11 @@
 #include "SocketServer.h"
 #include "Socket.h"
 #include "CommonDefs.h"
+#include <string.h>
 
-int ctrl_msg_hdlr(char* msg, size_t len, int conId);
+int ctrl_msg_hdlr(char*, size_t, int);
 void* ctrl_thread(void*);
+int thread_affinity_bind(int);
+int thread_set_prio(int, int);
 
 #endif

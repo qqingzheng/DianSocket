@@ -228,7 +228,8 @@ int SocketServer::sctp_recv(void** msgBuf, size_t* msgLen)
         {
             if (pConnectedSocks[availConnIdx]->saccept(serverFd) == false)
             {
-                LOG_ERROR("accept failed [%s]\n", strerror(errno));
+                LOG_ERROR("accept failed [%s]. availConnIdx=%d, serverFd=%d\n", strerror(errno), 
+                availConnIdx, serverFd);
             }
             else
             {

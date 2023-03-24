@@ -1,5 +1,5 @@
 # Common Settings
-SUB_PROJECT := socket dian_protocol server#client
+SUB_PROJECT := socket protocol server#client
 
 
 all: show-info build-sub-project

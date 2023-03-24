@@ -2,7 +2,7 @@ SUB_PROJECT_NAME := Dian Socket Server
 TARGET = server
 
 DLIBS := ../socket/libdiansocket.so\
-		 ../dian_protocol/libdianprotocol.so
+		 ../protocol/libdianprotocol.so
 INCLUDE_PATH := include/ \
 				../socket/include
 LDFLAGS := -lsctp
