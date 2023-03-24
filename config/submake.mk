@@ -17,7 +17,7 @@ ifdef BUILD_DLIB # 是否需要编译为动态链接库
 OBJCXXFLAGS += -fPIC
 endif
 
-ifdef ASN_MODULE_CFLAGS # 是否需要编译为动态链接库
+ifdef ASN_MODULE_SRCS # 是否需要编译为动态链接库
 OBJCCFLAGS += ${ASN_MODULE_CFLAGS} -DASN_PDU_COLLECTION -w -fPIC
 endif
 

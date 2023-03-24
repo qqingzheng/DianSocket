@@ -1,0 +1,4 @@
+#ifdef DIAN_PROTOCOL_COMMON_STRUCT_H
+#define COMMON_STRUCT_H
+
+#endif

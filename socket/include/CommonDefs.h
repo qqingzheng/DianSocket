@@ -13,7 +13,7 @@ typedef __UINT64_TYPE__ uint64_t;
 #ifndef DEBUG
 #define DEBUG 0
 #endif
-#define LOG_INFO(print_this...) if(DEBUG){ fprintf(stderr, "INFO:" print_this); fflush(stderr); }
-#define LOG_ERROR(print_this...) if(DEBUG){ fprintf(stderr, "ERROR:" print_this); fflush(stderr);  }
+#define LOG_INFO(print_this...) if(DEBUG){ fprintf(stderr, "INFO:\t" print_this); fflush(stderr); }
+#define LOG_ERROR(print_this...) if(DEBUG){ fprintf(stderr, "ERROR:\t" print_this); fflush(stderr);  }
 
 #endif
