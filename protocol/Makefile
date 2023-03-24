@@ -10,9 +10,15 @@ SRC_FILES := $(wildcard src/*.cpp)
 OBJS_FILES := $(SRC_FILES:.cpp=.o)
 OBJS_ASN :=  $(wildcard dian_protocol_asn/build/*.o)
 
-all: $(TARGET)
+
+
+all: build-asn $(TARGET)
 	@g++ -shared $(OBJS_FILES) $(OBJS_ASN) -o $^
 	@echo "\t ✅ $(SUB_PROJECT_NAME) Build Finished"
 $(TARGET): build-sub-project
+
+.PHONY: build-asn
+build-asn:
+	@make -C dian_protocol_asn -s
 
 include ../config/submake.mk
