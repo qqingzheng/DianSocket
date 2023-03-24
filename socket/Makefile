@@ -8,13 +8,8 @@ BUILD_PATH := build/
 SRC_FILES := $(wildcard src/*.cpp)
 OBJS_FILES := $(subst src/, $(BUILD_PATH), $(patsubst %.cpp, %.o, $(SRC_FILES)))
 all: $(TARGET)
-	@g++ -shared $(OBJS_FILES) -o $(BUILD_PATH)$^
+	@g++ -shared $(OBJS_FILES) -o $^
 	@echo "\t ✅ $(SUB_PROJECT_NAME) Build Finished"
 $(TARGET): build-sub-project
 
-.PHONY: clean
-clean:
-	@rm -rf $(BUILD_PATH)
-	@echo "✅ $(SUB_PROJECT_NAME) cleaned"
-
-include ../config/submake.global
+include ../config/submake.mk

@@ -5,8 +5,8 @@
 class AbstractServer
 {
 public:
-    AbstractServer();
-    virtual ~AbstractServer();
+    AbstractServer() {};
+    virtual ~AbstractServer() {};
     virtual int  create()                                    = 0;
     virtual int  send(int conIdx, void* msg, size_t msg_len) = 0;
     virtual int  recv(void** msgBuf, size_t* msgLen)         = 0;

@@ -57,7 +57,7 @@ class Socket
 {
 public:
     Socket();
-    virtual ~Socket();
+    virtual ~Socket() {};
     int get_socket_fd()
     {
         return sSocketConfig.sockFd;
@@ -66,8 +66,14 @@ public:
     {
         return sSocketConfig.sCommonCfg.socketType;
     };
-    const char* getHostName(bool isLocal = true) const;
-    int         getPort(bool isLocal = true);
+    const char* getHostName(bool isLocal = true) const{ 
+        if(isLocal) return sSocketConfig.sCommonCfg.name;
+        else return sSocketConfig.sCommonCfg.name_r;
+    };
+    int         getPort(bool isLocal = true){
+        if(isLocal) return sSocketConfig.sCommonCfg.port;
+        else return sSocketConfig.sCommonCfg.port_r;
+    }
 
     virtual void init_local_host(const SocketParamStruct* sSockParam) final;
     virtual void init_remote_host(const SocketParamStruct* sSockParam) final;

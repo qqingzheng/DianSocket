@@ -1,10 +1,19 @@
 # Common Settings
-SUB_PROJECT := socket server #client
+SUB_PROJECT := socket dian_protocol server#client
 
 
 all: show-info build-sub-project
 	@echo Build Finished 
 	@echo "\033[33m----- Welcome to Dian Intel -----\033[0m"
+
+.PHONY: build-socket
+build-socket: socket
+
+.PHONY: build-server
+build-server: server	
+
+.PHONY: build-dian-protocol
+build-server: dian_protocol
 
 .PHONY: show-info
 show-info:

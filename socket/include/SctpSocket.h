@@ -10,8 +10,8 @@
 
 class SctpSocket : public Socket{
     public:
-    SctpSocket();
-    virtual ~SctpSocket();
+    SctpSocket() { };
+    virtual ~SctpSocket() {};
 
     int32_t                  create_socket();
     bool                     saccept(int32_t listenSockFd) override;

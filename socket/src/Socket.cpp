@@ -19,14 +19,14 @@ int32_t Socket::create_socket(){
     int32_t socketFd;
     socketFd = socket(sSocketConfig.sCommonCfg.addr.ss_family, 
     sSocketConfig.sCommonCfg.socketType, sSocketConfig.sCommonCfg.protoType);
-    LOG_INFO("ProtoType: %d  SocketType: %d", sSocketConfig.sCommonCfg.socketType, sSocketConfig.sCommonCfg.protoType);
+    LOG_INFO("ProtoType: %d  SocketType: %d \n", sSocketConfig.sCommonCfg.protoType, sSocketConfig.sCommonCfg.socketType);
 
     if(socketFd < 0){
-        LOG_ERROR("Failed to create socket!");
+        LOG_ERROR("Failed to create socket!\n");
         exit(1);
     }
-
-    LOG_INFO("Socket created, fd= %d", socketFd);
+    sSocketConfig.sockFd = socketFd;
+    LOG_INFO("Socket created, fd= %d\n", socketFd);
     return socketFd;
 }
 
@@ -43,7 +43,7 @@ void Socket::init_local_host(const SocketParamStruct* sSockParam){
 
     error                               = getaddrinfo(sSockParam->HostName, 0, NULL, &res);
     if(error){
-        LOG_ERROR("%s.\n", gai_strerror(error));
+        LOG_ERROR("getaddrinfo: %s %s\n", sSockParam->HostName, gai_strerror(error));
     }
     
     switch(res->ai_family){
@@ -148,7 +148,7 @@ int32_t Socket::sbind(){
         if (i > 0)
         {
             // 等待重试
-            LOG_INFO("Waiting for retry...%d", i);
+            LOG_INFO("Waiting for retry...%d\n", i);
             sleep(1); 
         }
         error = getnameinfo((struct sockaddr*)saddr, addr_len, host_str, NI_MAXHOST, serv_str, NI_MAXSERV,
@@ -157,7 +157,7 @@ int32_t Socket::sbind(){
         {
             LOG_ERROR("%s\n", gai_strerror(error));
         }
-        LOG_INFO("\tbind(sockFd=%d, [a:%s,p:%s])  --  attempt %d/%d\n", sSocketConfig.sockFd, host_str, serv_str,
+        LOG_INFO("bind(sockFd=%d, [a:%s,p:%s]) -- attempt %d/%d\n", sSocketConfig.sockFd, host_str, serv_str,
                     i + 1, SOCK_MAX_RETRY);
         error = bind(sSocketConfig.sockFd, (struct sockaddr*)saddr, addr_len);
 
@@ -165,7 +165,7 @@ int32_t Socket::sbind(){
         {
             if (errno != EADDRINUSE)
             {
-                LOG_ERROR("\nbind: can not bind to %s:%s: %s \n", host_str, serv_str, strerror(errno));
+                LOG_ERROR("bind: can not bind to %s:%s: %s \n", host_str, serv_str, strerror(errno));
                 exit(1);
             }
         }
@@ -208,7 +208,7 @@ void Socket::set_send_recv_buf(int sendbuf, int recvbuf)
         int len = sizeof(recvbuf);
         setsockopt(sSocketConfig.sockFd, SOL_SOCKET, SO_RCVBUF, &recvbuf, sizeof(recvbuf));
         getsockopt(sSocketConfig.sockFd, SOL_SOCKET, SO_RCVBUF, &recvbuf, (socklen_t*)&len);
-        LOG_INFO("sock %d  recv buf size set to:%d.\n", sSocketConfig.sockFd, recvbuf);
+        LOG_INFO("sock %d recv buf size set to:%d.\n", sSocketConfig.sockFd, recvbuf);
     }
 }
 

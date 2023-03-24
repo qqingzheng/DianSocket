@@ -10,7 +10,9 @@
 
 class SocketServer: public AbstractServer
 {
-public: 
+public:
+    SocketParamStruct           socketParams;
+
     SocketServer();
     virtual ~SocketServer();
     virtual int create() override;
@@ -37,13 +39,13 @@ public:
     };
 
 private: 
-    SocketParamStruct           socketParams;
     Socket*                     pListenSock{nullptr};
     Socket*                     pConnectedSocks[MAX_CONNECTIONS];
     bool                        nonBlockListen{false};  
 
 private: 
     int sctp_recv(void** msgBuf, size_t* msgLen);
+    int sctp_recv(int conIdx, void* msgBuf);
 };
 
 #endif
