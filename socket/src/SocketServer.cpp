@@ -222,7 +222,6 @@ int SocketServer::sctp_recv(void** msgBuf, size_t* msgLen)
 
     if (retSelVal > 0)
     {
-        LOG_INFO("Select returned with %d\n", retSelVal);
         const int& serverFd = pListenSock->get_socket_fd();
         if (FD_ISSET(serverFd, &read_fd_set)) // 这里如果是服务器的ListenSock被select了
         {
@@ -233,7 +232,8 @@ int SocketServer::sctp_recv(void** msgBuf, size_t* msgLen)
             }
             else
             {
-                LOG_INFO("FD: %d accept a connection.\n", serverFd);
+                LOG_INFO("Server accept a connection. serverSockFd=%d <- clientSockFd=%d\n", serverFd,
+                pConnectedSocks[availConnIdx]->get_socket_fd());
                 pConnectedSocks[availConnIdx]->set_send_recv_buf(DATA_BUFFER, DATA_BUFFER);
             }
         }
@@ -244,26 +244,24 @@ int SocketServer::sctp_recv(void** msgBuf, size_t* msgLen)
             msgLen[i] = 0;
             if ((pConnectedSocks[i]->get_socket_fd() > 0) && (FD_ISSET(pConnectedSocks[i]->get_socket_fd(), &read_fd_set)))
             {
-                LOG_INFO("Returned fd is %d [index, i: %d]\n", pConnectedSocks[i]->get_socket_fd(), i);
+                // LOG_INFO("Returned fd is %d [index, i: %d]\n", pConnectedSocks[i]->get_socket_fd(), i);
                 int retReadVal;
                 retReadVal = pConnectedSocks[i]->srecv(msgBuf[i], DATA_BUFFER);
                 if (retReadVal == 0)
                 {
-                    LOG_ERROR("Closing connection for fd:%d\n", pConnectedSocks[i]->get_socket_fd());
                     pConnectedSocks[i]->sclose();
                 }
                 if (retReadVal > 0)
                 {
-                    LOG_INFO("AL Received msg from sockFD:%d (%s:%d), length:%d. bytes:\n %*.s\n",
+                    LOG_INFO("Received msg from sockFd=%d (%s:%d), length=%d content=%s\n",
                                 pConnectedSocks[i]->get_socket_fd(), pConnectedSocks[i]->getHostName(false),
-                                pConnectedSocks[i]->getPort(false), retReadVal, 10,
-                                (char*)msgBuf[i]);  // print first 10 charactors
+                                pConnectedSocks[i]->getPort(false), retReadVal, ((char**)msgBuf)[i]);  // print first 10 charactors
                     msgLen[i] = retReadVal;
                     totalReadLength += retReadVal;
                 }
                 if (retReadVal == -1)
                 {
-                    LOG_ERROR("AL recv() failed from sockFD:%d (%s:%d) [%s]\n", pConnectedSocks[i]->get_socket_fd(),
+                    LOG_ERROR("recv() failed from sockFd:%d (%s:%d) [%s]\n", pConnectedSocks[i]->get_socket_fd(),
                                 pConnectedSocks[i]->getHostName(), pConnectedSocks[i]->getPort(), strerror(errno));
                     break;
                 }

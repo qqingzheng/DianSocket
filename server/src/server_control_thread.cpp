@@ -11,6 +11,9 @@ void* ctrl_thread(void* _argv){
         LOG_ERROR("Create listening Socket failed!\n");
         return NULL;
     }
+    printf("Aaa");
+    // INFO("Server is running and listening: Ip=%s, Port=%d", 
+    // ctrlSocketServer.socketParams.HostName, ctrlSocketServer.socketParams.Port);
 
     int           rcv          = 0;
     void*         msgBuf[MAX_CONNECTIONS];
@@ -40,7 +43,7 @@ void* ctrl_thread(void* _argv){
 
 int ctrl_msg_hdlr(char* msg, size_t len, int conId){
     int rc = 0;
-    LOG_INFO("get msg");
+    INFO("get msg");
     return rc;
 }
 

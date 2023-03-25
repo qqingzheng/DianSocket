@@ -19,7 +19,7 @@ int main(int argc, const char** argv){
         LOG_ERROR("connect to server %s:%d failed.", sSocketParam.HostName, sSocketParam.Port);
         return 1;
     }
-    char buf[4] = "asd";
-    socket.ssend(buf, 3);
+    char buf[4] = "a";
+    socket.ssend(buf, 2);
     return 0;
 }

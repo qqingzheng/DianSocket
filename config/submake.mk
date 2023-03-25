@@ -1,8 +1,7 @@
 CXX := g++
 CC := gcc
 
-FLAGS := -g\
-		 -DDEBUG=1
+FLAGS := -g
 FLAGS += $(addprefix -I, $(INCLUDE_PATH))
 
 CCFLAGS := $(FLAGS)
@@ -38,6 +37,7 @@ $(BUILD_PATH):
 
 .PHONY: clean
 clean:
+	@rm $(TARGET)
 	@rm -rf $(BUILD_PATH)
 	@echo "✅ $(SUB_PROJECT_NAME) cleaned"
 

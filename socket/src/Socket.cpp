@@ -183,7 +183,7 @@ int32_t Socket::sbind(){
 int32_t Socket::sclose()
 {
     int32_t error = 0;
-    LOG_INFO("\tclose(sockFd=%d)\n", sSocketConfig.sockFd);
+    LOG_INFO("\tclose sockFd=%d\n", sSocketConfig.sockFd);
     error = close(sSocketConfig.sockFd);
     if (error != 0)
     {

@@ -186,18 +186,17 @@ ssize_t SctpSocket::srecv(void* recvbuf, size_t buflen)
     {
         if (errno == EAGAIN)
         {
-            // nothing recv by the non-blocking recvmsg call. do nothing
+            // 如果是non-blocking的模式，那么这里是正常的
             return 0;
         }
-        LOG_ERROR(" recvmsg: %s \n\n", strerror(errno));
+        LOG_ERROR("recvmsg: %s \n\n", strerror(errno));
         return -1;
     }
     else if (lenRecv == 0)
     {
-        LOG_ERROR("\n\t\tConnnection closed.\n");
+        // 连接关闭
         return 0;
     }
-    LOG_INFO("sSndRcvinfo, assoc_id:%d, flag: %d\n", sSndRcvinfo.sinfo_assoc_id, sSndRcvinfo.sinfo_flags);
     return lenRecv;
 }
 

@@ -12,8 +12,8 @@ build-socket: socket
 .PHONY: build-server
 build-server: server	
 
-.PHONY: build-dian-protocol
-build-server: dian_protocol
+.PHONY: build-protocol
+build-server: protocol
 
 .PHONY: show-info
 show-info:
